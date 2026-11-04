@@ -8,4 +8,4 @@ COPY config.json /etc/xray/config.json
 EXPOSE 10002
 
 # تشغيل Xray
-CMD ["xray", "-c", "/etc/xray/config.json"]
+CMD ["run", "-c", "/etc/xray/config.json"]

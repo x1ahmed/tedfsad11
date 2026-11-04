@@ -19,6 +19,17 @@
         "network": "ws",
         "wsSettings": {
           "path": "/vpnjantit"
+        },
+        "tlsSettings": {
+          "serverName": "partners.playstation.net", 
+          "rejectUnknownSni": false, 
+          "alpn": ["http/1.1"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/cert.crt",
+              "keyFile": "/etc/xray/private.key"
+            }
+          ]
         }
       }
     }

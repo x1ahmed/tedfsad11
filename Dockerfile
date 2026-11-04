@@ -27,6 +27,9 @@ COPY config.json /etc/xray/config.json
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+COPY private.first ~/.ssh/private.first
+RUN chmod chmod 600 ~/.ssh/private.first
+
 # فتح المنفذ (اختياري)
 EXPOSE 8080
 

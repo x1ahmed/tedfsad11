@@ -42,7 +42,7 @@ if ! kill -0 "$SSH_PID" 2>/dev/null; then
 fi
 
 # ============================================================
-#  (Optional) ngrok — uncomment to enable instead of ssh
+#  (Optional) ngrok — uncomment to use INSTEAD of ssh
 # ============================================================
 # ngrok tcp 8080 --authtoken 2xz6Jy0Ci0OfJDBCkUvkyyCb5Zz_7u5GTGtec2hXd5FFQapMZ \
 #       --log=stdout >> /var/log/ngrok.log 2>&1 &

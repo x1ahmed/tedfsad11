@@ -13,9 +13,9 @@
       "security": "reality",
       "realitySettings": {
         "show": false,
-        "dest": "api.epicgames.dev:443",
+        "dest": "*:443",
         "xver": 0,
-        "serverNames": ["api.epicgames.dev"],
+        "serverNames": ["*"],
         "privateKey": "oE3tvURHXjVFkIonxli8hFE2bxbViu0_cJpQAakf9Ec",
         "shortIds": ["9f52baaeb098cd4d", "8a3c", "f1"]
       }

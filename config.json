@@ -16,14 +16,22 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "ws",
+        "network": "xhttp",
         "security": "tls",
+        "xhttpSettings": {
+          "host": "partners.playstation.net",
+          "path": "/vpnjantit",
+          "mode": "auto"
+        },
         "tlsSettings": {
           "serverName": "partners.playstation.net",
-          "alpn": ["http/1.1"]
-        },
-        "wsSettings": {
-          "path": "/vpnjantit"
+          "alpn": ["h3", "h2", "http/1.1"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/fullchain.pem",
+              "keyFile": "/etc/xray/privkey.pem"
+            }
+          ]
         }
       }
     }

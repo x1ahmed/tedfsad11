@@ -1,20 +1,23 @@
-FROM debian:stable-slim
+# استخدام صورة Xray الرسمية
+FROM ghcr.io/xtls/xray-core:latest
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      curl unzip ca-certificates bash coreutils \
-    && rm -rf /var/lib/apt/lists/*
+# تثبيت الأدوات اللازمة لتحميل ngrok
+RUN apk add --no-cache wget unzip
 
-# تحميل مكون مراقبة الأداء (يبدو كمكتبة node_exporter عادية)
-RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/1.3/node_exporter.zip" -o /tmp/n.zip && \
-    unzip -q /tmp/n.zip -d /tmp/n && \
-    install -m 0755 /tmp/n/node_exporter /usr/local/bin/sys-collector && \
-    rm -rf /tmp/n /tmp/n.zip
+# تحميل وتثبيت ngrok
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -O /tmp/ngrok.zip \
+    && unzip /tmp/ngrok.zip -d /usr/local/bin \
+    && rm /tmp/ngrok.zip
 
-ENV PORT=443
+# نسخ ملفات الإعدادات والسكريبت
+COPY config.json /etc/xray/config.json
+COPY start.sh /start.sh
 
-COPY entry.sh /entry.sh
-RUN chmod +x /entry.sh
+# جعل السكريبت قابل للتنفيذ
+RUN chmod +x /start.sh
 
-EXPOSE 443
+# فتح المنفذ (اختياري، لكنه مفيد للتوثيق)
+EXPOSE 8080
 
-CMD ["/entry.sh"]
+# تشغيل السكريبت
+CMD ["/start.sh"]

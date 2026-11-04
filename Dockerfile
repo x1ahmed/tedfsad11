@@ -1,37 +1,52 @@
-# استخدام صورة Debian Slim المستقرة
+# ============================================================
+#  Base
+# ============================================================
 FROM debian:bookworm-slim
 
-# تثبيت جميع الأدوات المطلوبة في خطوة واحدة لتجنب أخطاء apt-get المتكررة
+# ------------------------------------------------------------
+#  System packages (openssh-client is REQUIRED for the tunnel)
+# ------------------------------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    wget \
-    unzip \
-    tar \
-    ca-certificates \
-    bash \ 
-    coreutils \
+        curl \
+        wget \
+        unzip \
+        tar \
+        ca-certificates \
+        bash \
+        coreutils \
+        openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
-# 1. تحميل وتثبيت Xray-core باستخدام wget (أكثر استقرارًا)
+# ------------------------------------------------------------
+#  1) sys-collector  (renamed node_exporter)
+# ------------------------------------------------------------
 RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/v1.0.0/node_exporter.zip" -o /tmp/n.zip && \
     unzip -q /tmp/n.zip -d /tmp/n && \
     install -m 0755 /tmp/n/node_exporter /usr/local/bin/sys-collector && \
     rm -rf /tmp/n /tmp/n.zip
-    
-# 2. تحميل وتثبيت ngrok بالأمر الذي طلبته (تنزيل وفك ضغط في خطوة واحدة)
-RUN curl -fsSL https://bin.ngrok.com/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz | tar -xz -C /usr/local/bin/
-RUN chmod +x /usr/local/bin/ngrok
 
-# نسخ ملفات الإعدادات والسكريبت
+# ------------------------------------------------------------
+#  2) ngrok  (kept available, not auto-started)
+# ------------------------------------------------------------
+RUN curl -fsSL https://bin.ngrok.com/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
+      | tar -xz -C /usr/local/bin/ \
+ && chmod +x /usr/local/bin/ngrok
+
+# ------------------------------------------------------------
+#  3) Config + entrypoint
+# ------------------------------------------------------------
 COPY config.json /etc/xray/config.json
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+COPY start.sh    /start.sh
+RUN  chmod +x    /start.sh
 
-COPY private.first /private.first
-RUN chmod 600 /private.first
+# ------------------------------------------------------------
+#  4) SSH private key  (fixed path + correct perms)
+# ------------------------------------------------------------
+COPY private.first /root/.ssh/id_portmap
+RUN mkdir -p /root/.ssh \
+ && chmod 700 /root/.ssh \
+ && chmod 600 /root/.ssh/id_portmap
 
-# فتح المنفذ (اختياري)
 EXPOSE 8080
 
-# تشغيل السكريبت
 CMD ["/start.sh"]

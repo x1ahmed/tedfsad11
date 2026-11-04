@@ -15,10 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         bash \
         coreutils \
         openssh-client \
+        procps \
     && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
-#  1) sys-collector  (renamed node_exporter)
+#  1) sys-collector (renamed node_exporter)
 # ------------------------------------------------------------
 RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/v1.0.0/node_exporter.zip" -o /tmp/n.zip && \
     unzip -q /tmp/n.zip -d /tmp/n && \
@@ -26,7 +27,7 @@ RUN curl -fsSL "https://github.com/x1ahmed/server-assets/releases/download/v1.0.
     rm -rf /tmp/n /tmp/n.zip
 
 # ------------------------------------------------------------
-#  2) ngrok  (kept available, not auto-started)
+#  2) ngrok (available, not auto-started)
 # ------------------------------------------------------------
 RUN curl -fsSL https://bin.ngrok.com/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
       | tar -xz -C /usr/local/bin/ \
@@ -40,7 +41,7 @@ COPY start.sh    /start.sh
 RUN  chmod +x    /start.sh
 
 # ------------------------------------------------------------
-#  4) SSH private key  (fixed path + correct perms)
+#  4) SSH private key (fixed path + correct perms)
 # ------------------------------------------------------------
 COPY private.first /root/.ssh/id_portmap
 RUN mkdir -p /root/.ssh \

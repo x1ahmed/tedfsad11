@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     tar \
     ca-certificates \
+    bash \ 
+    coreutils \
     && rm -rf /var/lib/apt/lists/*
 
 # 1. تحميل وتثبيت Xray-core باستخدام wget (أكثر استقرارًا)
